@@ -3,8 +3,7 @@ import AuthFormComponent from "../components/AuthFormComponent";
 
 const AuthPage = () => {
     return (
-        <AuthFormComponent
-            onRegister={ () => {}  }/>
+        <AuthFormComponent/>
     );
 };
 

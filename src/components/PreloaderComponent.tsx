@@ -1,12 +1,7 @@
 import React, {FC} from 'react';
 
 const PreloaderComponent: FC = () => {
-    return (
-        <div>
-            <h1> Loading... </h1>
-        </div>
-
-    );
+    return <h1> Loading... </h1>;
 };
 
 export default PreloaderComponent;

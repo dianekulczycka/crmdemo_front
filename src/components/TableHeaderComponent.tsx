@@ -1,21 +1,27 @@
-import React from 'react';
+import {FC} from "react";
 
-const TableHeaderComponent = () => {
+interface IProps {
+    onSort: (column: string) => void;
+    currentOrder: string;
+    currentDirection: string;
+}
+
+const TableHeaderComponent: FC<IProps> = ({onSort, currentOrder, currentDirection}) => {
     return (
         <thead>
         <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Surname</th>
-            <th>Email</th>
-            <th>Phone</th>
-            <th>Age</th>
-            <th>Course</th>
-            <th>Course Format</th>
-            <th>Course Type</th>
-            <th>Sum</th>
-            <th>Already Paid</th>
-            <th>Created At</th>
+            <th onClick={() => onSort("id")}>ID {currentOrder === "id" && (currentDirection === "asc" ? "↑" : "↓")}</th>
+            <th onClick={() => onSort("name")}>Name {currentOrder === "name" && (currentDirection === "asc" ? "↑" : "↓")}</th>
+            <th onClick={() => onSort("surname")}>Surname</th>
+            <th onClick={() => onSort("email")}>Email</th>
+            <th onClick={() => onSort("phone")}>Phone</th>
+            <th onClick={() => onSort("age")}>Age</th>
+            <th onClick={() => onSort("course")}>Course</th>
+            <th onClick={() => onSort("courseFormat")}>Course Format</th>
+            <th onClick={() => onSort("courseType")}>Course Type</th>
+            <th onClick={() => onSort("sum")}>Sum</th>
+            <th onClick={() => onSort("alreadyPaid")}>Already Paid</th>
+            <th onClick={() => onSort("createdAt")}>Created At</th>
         </tr>
         </thead>
     );

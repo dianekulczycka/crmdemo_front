@@ -1,25 +1,25 @@
-import {FC} from 'react';
-import ReactPaginate from 'react-paginate';
-import {useAppDispatch} from "../store/helpers/useAppDispatch";
-import {orderActions} from "../store/slices/orderSlice";
+import { FC } from "react";
+import ReactPaginate from "react-paginate";
 
 interface IProps {
     total: number;
     page: number;
-    itemsPerPage: number;
+    setSearchParams: (params: any) => void;
 }
 
-const PaginationComponent: FC<IProps> = ({total, page, itemsPerPage}) => {
-    const dispatch = useAppDispatch();
-
+const PaginationComponent: FC<IProps> = ({ total, page, setSearchParams }) => {
     const handlePageChange = (selectedPage: { selected: number }) => {
-        dispatch(orderActions.setPage(selectedPage.selected + 1));
+        setSearchParams((prev: URLSearchParams) => {
+            const newParams = new URLSearchParams(prev);
+            newParams.set("page", String(selectedPage.selected + 1));
+            return newParams;
+        });
     };
 
     return (
         <div className="p-lg-1">
             <ReactPaginate
-                pageCount={Math.ceil(total / itemsPerPage)}
+                pageCount={Math.ceil(total / 25)}
                 pageRangeDisplayed={7}
                 marginPagesDisplayed={1}
                 onPageChange={handlePageChange}
