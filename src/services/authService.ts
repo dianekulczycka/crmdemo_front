@@ -1,9 +1,8 @@
 import axios, {AxiosResponse} from "axios";
-import {IAuthResponse} from "../interfaces/manager/IAuthResponse";
-import {IAuthRequest} from "../interfaces/manager/IAuthRequest";
+import {IAuthResponse} from "../interfaces/auth/IAuthResponse";
+import {IAuthRequest} from "../interfaces/auth/IAuthRequest";
 import {getRefreshToken, setAccessToken, setRefreshToken} from "./tokenService";
-
-const BASE_URL: string = "http://localhost:8080/v1/api";
+import {BASE_URL} from "./consts";
 
 export const login = async (authData: IAuthRequest): Promise<IAuthResponse> => {
     try {
@@ -18,15 +17,14 @@ export const login = async (authData: IAuthRequest): Promise<IAuthResponse> => {
 
         return response.data;
     } catch (error) {
-        console.error("Error during auth:", error);
-        throw new Error("Auth failed");
+        console.error("Error auth", error);
+        throw new Error("Auth fail");
     }
 };
 
 export const refreshAccessToken = async (): Promise<string | null> => {
     try {
         const refreshToken = getRefreshToken();
-        if (!refreshToken) throw new Error("No refresh token found");
 
         const response: AxiosResponse<IAuthResponse> = await axios.post(
             `${BASE_URL}/auth/refresh-token`,
@@ -39,7 +37,7 @@ export const refreshAccessToken = async (): Promise<string | null> => {
 
         return response.data.accessToken;
     } catch (error) {
-        console.error("Error refreshing token:", error);
+        console.error("Error refresh token", error);
         return null;
     }
 };

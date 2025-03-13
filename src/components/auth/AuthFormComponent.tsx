@@ -1,7 +1,7 @@
 import React, {FC} from "react";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {useNavigate} from "react-router-dom";
-import {login} from "../services/authService";
+import {login} from "../../services/authService";
 
 interface IFormData {
     email: string;

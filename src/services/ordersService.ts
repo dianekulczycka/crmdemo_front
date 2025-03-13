@@ -1,8 +1,8 @@
-import axios from "axios";
+import axios, {AxiosResponse} from "axios";
 import {getAccessToken} from "./tokenService";
 import {refreshAccessToken} from "./authService";
-
-const BASE_URL: string = "http://localhost:8080/v1/api";
+import {BASE_URL} from "./consts";
+import {IOrdersPaginated} from "../interfaces/order/IOrderPaginated";
 
 axios.interceptors.request.use(
     (config) => {
@@ -31,14 +31,14 @@ axios.interceptors.response.use(
     }
 );
 
-export const getAllOrdersService = async (page: number, order: string, direction: string) => {
+export const getAllOrders = async (page: number, order: string, direction: string): Promise<IOrdersPaginated> => {
     try {
-        const response = await axios.get(`${BASE_URL}/orders`, {
+        const response: AxiosResponse<IOrdersPaginated> = await axios.get(`${BASE_URL}/orders`, {
             params: {page, order, direction}
         });
         return response.data;
     } catch (error) {
-        console.error("Failed to get orders", error);
+        console.error("Failed get orders", error);
         throw error;
     }
 };

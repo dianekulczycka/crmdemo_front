@@ -13,5 +13,7 @@ export interface IOrder {
     createdAt: string | null,
     utm: string | null,
     msg: string | null,
-    status: string | null
+    status: string | null,
+    manager: string | null,
+    group: string | null
 }
