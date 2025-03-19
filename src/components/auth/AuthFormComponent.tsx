@@ -16,7 +16,7 @@ const AuthFormComponent: FC = () => {
         try {
             const {email, password} = data;
             const authData = {email, password};
-            const response = await login(authData);
+            await login(authData);
             navigate("/orders?page=1&order=id&direction=desc");
         } catch (error) {
             alert("Login failed. Please try again.");

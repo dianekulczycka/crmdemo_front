@@ -15,5 +15,5 @@ export interface IOrder {
     msg: string | null,
     status: string | null,
     manager: string | null,
-    group: string | null
+    groupName: string | null
 }

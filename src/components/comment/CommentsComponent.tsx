@@ -5,14 +5,16 @@ import {getAllComments} from "../../services/commentsService";
 import CommentFormComponent from "./CommentFormComponent";
 import CommentComponent from "./CommentComponent";
 import PreloaderComponent from "../PreloaderComponent";
+import OrderChangeModalComponent from "../order/OrderChangeModalComponent";
 
-interface CommentProps {
+interface IProps {
     order: IOrder;
 }
 
-const CommentsComponent: FC<CommentProps> = ({order}) => {
+const CommentsComponent: FC<IProps> = ({order}) => {
     const [comments, setComments] = useState<IComment[]>([]);
-    const [isLoaded, setIsLoaded] = useState<boolean>(false)
+    const [isLoaded, setIsLoaded] = useState<boolean>(false);
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
     useEffect(() => {
         setIsLoaded(false);
@@ -28,6 +30,15 @@ const CommentsComponent: FC<CommentProps> = ({order}) => {
         setComments([...comments, newComment]);
     };
 
+    const handleModalOpen = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleModalClose = () => {
+        setIsModalOpen(false);
+    };
+
+
     return (
         <>
             {isLoaded ? (
@@ -39,18 +50,30 @@ const CommentsComponent: FC<CommentProps> = ({order}) => {
                     <td colSpan={9}>
                         {comments.length > 0 && (
                             <ul className="list-group mb-3 m-2">
-                                {comments.map((comment) => (
-                                    <CommentComponent comment={comment}/>
+                                {comments.map((comment, index) => (
+                                    <CommentComponent key={index} comment={comment}/>
                                 ))}
                             </ul>
                         )}
                         <CommentFormComponent orderId={order.id} onCommentAdded={handleCommentAdded}/>
                     </td>
                     <td colSpan={1}>
-                        <button className="btn btn-success m-4 p-2">Edit</button>
+                        <button className="btn btn-success m-4 p-2" onClick={handleModalOpen}>
+                            edit
+                        </button>
                     </td>
                 </tr>) : <PreloaderComponent/>
             }
+
+            {isModalOpen && (
+                <div>
+                    <OrderChangeModalComponent
+                        order={order}
+                        onClose={handleModalClose}
+                        isOpen={isModalOpen}
+                    />
+                </div>
+            )}
         </>
     );
 };

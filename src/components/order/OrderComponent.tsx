@@ -26,7 +26,7 @@ const OrderComponent: FC<IProps> = ({order, isExpanded, onClick}) => {
                 <td>{order.alreadyPaid ?? "null"}</td>
                 <td>{order.createdAt || "null"}</td>
                 <td>{order.manager || "null"}</td>
-                <td>{order.group || "null"}</td>
+                <td>{order.groupName || "null"}</td>
             </tr>
             {isExpanded && <CommentsComponent order={order}/>}
         </>
