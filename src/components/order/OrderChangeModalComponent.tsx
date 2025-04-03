@@ -25,7 +25,7 @@ const OrderChangeModalComponent: FC<IProps> = ({onClose, order, isOpen}) => {
             .catch(error => console.error("Error fetching groups", error));
     }, []);
 
-    const onSubmit = async () => {
+    const onSubmit = async (data: IOrder) => {
         const groupName = newGroupName.trim() ? newGroupName.trim().toUpperCase() : selectedGroup;
 
         if (!groupName) {
@@ -38,13 +38,15 @@ const OrderChangeModalComponent: FC<IProps> = ({onClose, order, isOpen}) => {
             return;
         }
 
-        await editOrder(order.id, {
-            ...order,
-            sum: order.sum || 0,
-            alreadyPaid: order.alreadyPaid || 0,
-            age: order.age || 0,
-            groupName
-        });
+        const updatedOrder = {
+            ...data,
+            groupName,
+            sum: Number(data.sum) || 0,
+            alreadyPaid: Number(data.alreadyPaid) || 0,
+            age: Number(data.age) || 0
+        };
+
+        await editOrder(order.id, updatedOrder);
 
         onClose();
         navigate(0);
@@ -157,6 +159,8 @@ const OrderChangeModalComponent: FC<IProps> = ({onClose, order, isOpen}) => {
                                 <select {...field} className="form-select" value={field.value ?? ""}>
                                     <option value="FS">FS</option>
                                     <option value="QACX">QACX</option>
+                                    <option value="JCX">JCX</option>
+                                    <option value="JSCX">JSCX</option>
                                     <option value="FE">FE</option>
                                     <option value="PCX">PCX</option>
                                 </select>
@@ -200,8 +204,8 @@ const OrderChangeModalComponent: FC<IProps> = ({onClose, order, isOpen}) => {
                         <Controller
                             name="sum"
                             control={control}
-                            render={({field}) => (
-                                <input {...field} type="number" className="form-control" value={field.value ?? 0}/>
+                            render={({ field }) => (
+                                <input {...field} type="number" className="form-control" value={field.value ?? 0} />
                             )}
                         />
                     </div>
