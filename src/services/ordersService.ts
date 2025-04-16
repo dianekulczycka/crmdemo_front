@@ -4,6 +4,7 @@ import {refreshAccessToken} from "./authService";
 import {BASE_URL} from "./consts";
 import {IOrdersPaginated} from "../interfaces/order/IOrderPaginated";
 import {IOrder} from "../interfaces/order/IOrder";
+import {ISearchParams} from "../interfaces/order/ISearchParams";
 
 axios.interceptors.request.use(
     (config) => {
@@ -32,14 +33,12 @@ axios.interceptors.response.use(
     }
 );
 
-export const getAllOrders = async (page: number, order: string, direction: string): Promise<IOrdersPaginated> => {
+export const getAllOrders = async (params: ISearchParams): Promise<IOrdersPaginated> => {
     try {
-        const response: AxiosResponse<IOrdersPaginated> = await axios.get(`${BASE_URL}/orders/`, {
-            params: {page, order, direction}
-        });
+        const response: AxiosResponse<IOrdersPaginated> = await axios.get(`${BASE_URL}/orders/`, {params});
         return response.data;
     } catch (error) {
-        console.error("Failed get orders", error);
+        console.error("Failed to get orders", error);
         throw error;
     }
 };
