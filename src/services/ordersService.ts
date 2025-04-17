@@ -34,8 +34,15 @@ axios.interceptors.response.use(
 );
 
 export const getAllOrders = async (params: ISearchParams): Promise<IOrdersPaginated> => {
+    const token = getAccessToken();
     try {
-        const response: AxiosResponse<IOrdersPaginated> = await axios.get(`${BASE_URL}/orders/`, {params});
+        const response: AxiosResponse<IOrdersPaginated> = await axios.get(`${BASE_URL}/orders/`, {
+            params,
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+        });
         return response.data;
     } catch (error) {
         console.error("Failed to get orders", error);

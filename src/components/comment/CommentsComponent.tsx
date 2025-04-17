@@ -9,9 +9,10 @@ import OrderChangeModalComponent from "../order/OrderChangeModalComponent";
 
 interface IProps {
     order: IOrder;
+    groups: string[];
 }
 
-const CommentsComponent: FC<IProps> = ({order}) => {
+const CommentsComponent: FC<IProps> = ({order, groups}) => {
     const [comments, setComments] = useState<IComment[]>([]);
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -68,6 +69,7 @@ const CommentsComponent: FC<IProps> = ({order}) => {
             {isModalOpen && (
                 <div>
                     <OrderChangeModalComponent
+                        groups={groups}
                         order={order}
                         onClose={handleModalClose}
                         isOpen={isModalOpen}

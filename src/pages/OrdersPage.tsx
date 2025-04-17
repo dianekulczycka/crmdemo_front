@@ -3,18 +3,18 @@ import OrdersComponent from "../components/order/OrdersComponent";
 import PaginationComponent from "../components/order/PaginationComponent";
 import PreloaderComponent from "../components/PreloaderComponent";
 import {useNavigate, useSearchParams} from "react-router-dom";
-import {getAllOrders} from "../services/ordersService";
+import {getAllGroupNames, getAllOrders} from "../services/ordersService";
 import {IOrdersPaginated} from "../interfaces/order/IOrderPaginated";
 import {IOrder} from "../interfaces/order/IOrder";
 import {ISearchParams} from "../interfaces/order/ISearchParams";
 import FilterFormComponent from "../components/order/FilterFormComponent";
-import {pickBy} from "lodash";
 
 const OrdersPage: FC = () => {
     useNavigate();
 
     const [searchParams, setSearchParams] = useSearchParams();
     const [ordersPaginated, setOrdersPaginated] = useState<IOrder[]>([]);
+    const [groups, setGroups] = useState<string[]>([]);
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
     const [total, setTotal] = useState<number>(0);
 
@@ -37,6 +37,7 @@ const OrdersPage: FC = () => {
         groupName: searchParams.get("groupName") || undefined,
         startDate: searchParams.get("startDate") || undefined,
         endDate: searchParams.get("endDate") || undefined,
+        isAssignedToMe: searchParams.get("isAssignedToMe") === "true" || undefined,
     };
 
     useEffect(() => {
@@ -50,24 +51,25 @@ const OrdersPage: FC = () => {
             .catch(() => setIsLoaded(true));
     }, [searchParams]);
 
+    useEffect(() => {
+        getAllGroupNames()
+            .then((groups: string[]) => setGroups(groups.map(g => g.toUpperCase())))
+            .catch(error => console.error("Error fetching groups", error));
+    }, [setGroups]);
+
     const handleFilterChange = (filters: Partial<ISearchParams>) => {
-        if (Object.values(filters).some((value) => value !== undefined && value !== "")) {
-            const updatedParams = {
-                ...Object.fromEntries(searchParams.entries()),
-                ...pickBy(filters, (value) => value !== undefined && value !== ""),
-                page: "1",
-            };
+        const formattedParams: { [key: string]: string } = {};
 
-            const formattedParams = Object.fromEntries(
-                Object.entries(updatedParams).map(([key, value]) => {
-                    return [key, value.trim().toLowerCase()];
-                })
-            );
+        Object.entries(filters).forEach(([key, value]) => {
+            if (typeof value === "string") {
+                const trim = value.trim().toLowerCase();
+                if (trim) formattedParams[key] = trim;
+            } else if (typeof value === "boolean" && value) {
+                formattedParams[key] = "true";
+            }
+        });
 
-            setSearchParams(formattedParams);
-        } else {
-            setSearchParams({});
-        }
+        setSearchParams(formattedParams);
     };
 
     const updateSorting = (newOrder: string) => {
@@ -77,8 +79,7 @@ const OrdersPage: FC = () => {
         setSearchParams({
             ...Object.fromEntries(searchParams.entries()),
             order: newOrder,
-            direction: newDirection,
-            page: "1",
+            direction: newDirection
         });
     };
 
@@ -86,11 +87,14 @@ const OrdersPage: FC = () => {
         <div>
             {isLoaded ? (
                 <div className="d-flex flex-column align-items-center justify-content-evenly">
-                    <FilterFormComponent onFilterChange={handleFilterChange}/>
+                    <FilterFormComponent groups={groups} onFilterChange={handleFilterChange}/>
 
                     {ordersPaginated.length > 0 ? (
                         <>
-                            <OrdersComponent orders={ordersPaginated} onSort={updateSorting}/>
+                            <OrdersComponent
+                                orders={ordersPaginated}
+                                groups={groups}
+                                onSort={updateSorting}/>
                             <PaginationComponent
                                 total={total}
                                 page={page}

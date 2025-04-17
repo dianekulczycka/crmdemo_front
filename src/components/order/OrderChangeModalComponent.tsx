@@ -1,6 +1,6 @@
-import React, {FC, useEffect, useState} from "react";
+import React, {FC, useState} from "react";
 import {Controller, useForm} from "react-hook-form";
-import {editOrder, getAllGroupNames} from "../../services/ordersService";
+import {editOrder} from "../../services/ordersService";
 import {IOrder} from "../../interfaces/order/IOrder";
 import {Modal} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
@@ -9,21 +9,15 @@ interface IProps {
     onClose: () => void;
     order: IOrder;
     isOpen: boolean;
+    groups: string[];
 }
 
-const OrderChangeModalComponent: FC<IProps> = ({onClose, order, isOpen}) => {
-    const [groupNames, setGroupNames] = useState<string[]>([]);
+const OrderChangeModalComponent: FC<IProps> = ({onClose, order, isOpen, groups}) => {
     const [newGroupName, setNewGroupName] = useState<string>('');
     const [selectedGroup, setSelectedGroup] = useState('');
     const [error, setError] = useState<string | null>(null);
     const { control, handleSubmit } = useForm<IOrder>({defaultValues: order});
     const navigate = useNavigate();
-
-    useEffect(() => {
-        getAllGroupNames()
-            .then((groups: string[]) => setGroupNames(groups.map(g => g.toUpperCase())))
-            .catch(error => console.error("Error fetching groups", error));
-    }, []);
 
     const onSubmit = async (data: IOrder) => {
         const groupName = newGroupName.trim() ? newGroupName.trim().toUpperCase() : selectedGroup;
@@ -33,7 +27,7 @@ const OrderChangeModalComponent: FC<IProps> = ({onClose, order, isOpen}) => {
             return;
         }
 
-        if (newGroupName.trim() && groupNames.includes(groupName)) {
+        if (newGroupName.trim() && groups.includes(groupName)) {
             setError("This name exists, choose from options");
             return;
         }
@@ -68,7 +62,7 @@ const OrderChangeModalComponent: FC<IProps> = ({onClose, order, isOpen}) => {
                             setError('');
                         }}
                         disabled={!!newGroupName.trim()}>
-                        {groupNames.map((name, i) => <option key={i} value={name}>{name}</option>)}
+                        {groups.map((name, i) => <option key={i} value={name}>{name}</option>)}
                     </select>
 
                     <input

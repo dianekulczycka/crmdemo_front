@@ -5,10 +5,11 @@ import {IOrder} from "../../interfaces/order/IOrder";
 
 interface IProps {
     orders: IOrder[];
+    groups: string[];
     onSort: (column: string) => void;
 }
 
-const OrdersComponent: FC<IProps> = ({orders, onSort}) => {
+const OrdersComponent: FC<IProps> = ({orders, groups, onSort}) => {
     const [expandedOrderId, setExpandedOrderId] = useState<number | null>(null);
 
     const toggleExpand = (orderId: number) => {
@@ -24,6 +25,7 @@ const OrdersComponent: FC<IProps> = ({orders, onSort}) => {
                     <OrderComponent
                         key={index}
                         order={order}
+                        groups={groups}
                         isExpanded={expandedOrderId === order.id}
                         onClick={() => toggleExpand(order.id)}
                     />

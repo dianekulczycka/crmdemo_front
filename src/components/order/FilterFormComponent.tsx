@@ -4,11 +4,12 @@ import {ISearchParams} from "../../interfaces/order/ISearchParams";
 import dayjs from "dayjs";
 
 interface IProps {
+    groups: string[];
     onFilterChange: (filters: Partial<ISearchParams>) => void;
 }
 
-export const FilterFormComponent: FC<IProps> = ({onFilterChange}) => {
-    const {register, handleSubmit, reset} = useForm<Partial<ISearchParams>>();
+export const FilterFormComponent: FC<IProps> = ({groups, onFilterChange}) => {
+    const {register, handleSubmit} = useForm<Partial<ISearchParams>>();
 
     const onSubmit: SubmitHandler<Partial<ISearchParams>> = (data) => {
         const formattedData = {
@@ -19,11 +20,6 @@ export const FilterFormComponent: FC<IProps> = ({onFilterChange}) => {
         onFilterChange(formattedData);
     };
 
-    const handleClearFilters = () => {
-        reset();
-        onFilterChange({});
-    };
-
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <div className="d-flex flex-column">
@@ -32,21 +28,70 @@ export const FilterFormComponent: FC<IProps> = ({onFilterChange}) => {
                     <input {...register("surname")} placeholder="Surname" className="form-control m-2"/>
                     <input {...register("email")} placeholder="Email" className="form-control m-2"/>
                     <input {...register("phone")} placeholder="Phone" className="form-control m-2"/>
-                    <input {...register("status")} placeholder="Status" className="form-control m-2"/>
+
+                    <select {...register("status")} className="form-select m-2">
+                        <option value="">Satatus</option>
+                        <option value="new">New</option>
+                        <option value="in work">In Work</option>
+                        <option value="agreed">Agreed</option>
+                        <option value="disagreed">Disagreed</option>
+                        <option value="dubbing">Dubbing</option>
+                    </select>
+
+                    <div className="form-check m-2">
+                        <input
+                            {...register("isAssignedToMe")}
+                            type="checkbox"
+                            className="form-check-input"
+                            id="isAssignedToMe"
+                        />
+                        <label className="form-check-label" htmlFor="isAssignedToMe">My</label>
+                    </div>
                 </div>
+
                 <div className="d-flex flex-row">
-                    <input {...register("course")} placeholder="Course" className="form-control m-2"/>
-                    <input {...register("courseFormat")} placeholder="Course Format" className="form-control m-2"/>
-                    <input {...register("courseType")} placeholder="Course Type" className="form-control m-2"/>
-                    <input {...register("groupName")} placeholder="Group Name" className="form-control m-2"/>
+                    <select {...register("course")} className="form-select m-2">
+                        <option value="">Course</option>
+                        <option value="fs">FS</option>
+                        <option value="qacx">QACX</option>
+                        <option value="jcx">JCX</option>
+                        <option value="jscx">JSCX</option>
+                        <option value="fe">FE</option>
+                        <option value="pcx">PCX</option>
+                    </select>
+
+                    <select {...register("courseFormat")} className="form-select m-2">
+                        <option value="">Course format</option>
+                        <option value="static">static</option>
+                        <option value="online">online</option>
+                    </select>
+
+                    <select {...register("courseType")} className="form-select m-2">
+                        <option value="">Course type</option>
+                        <option value="pro">pro</option>
+                        <option value="minimal">minimal</option>
+                        <option value="premium">premium</option>
+                        <option value="incubator">incubator</option>
+                        <option value="vip">vip</option>
+                    </select>
+
+                    <select {...register("groupName")} className="form-select m-2">
+                        <option value="">Group</option>
+                        {groups.map((group) => (
+                            <option key={group} value={group}>{group}</option>
+                        ))}
+                    </select>
+
                     <input {...register("startDate")} type="date" className="form-control m-2"/>
                     <input {...register("endDate")} type="date" className="form-control m-2"/>
                     <button type="submit" className="btn btn-success m-2">Search</button>
-                    <button type="button" className="btn border-success m-2" onClick={handleClearFilters}>Clear filters</button>
+                    <button type="button" className="btn border-success m-2">
+                        Excel
+                    </button>
                 </div>
             </div>
         </form>
     );
-};
+}
 
 export default FilterFormComponent;

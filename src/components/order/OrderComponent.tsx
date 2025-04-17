@@ -6,9 +6,10 @@ interface IProps {
     order: IOrder;
     isExpanded: boolean;
     onClick: () => void;
+    groups: string[];
 }
 
-const OrderComponent: FC<IProps> = ({order, isExpanded, onClick}) => {
+const OrderComponent: FC<IProps> = ({order, groups, isExpanded, onClick}) => {
     return (
         <>
             <tr onClick={onClick} className="table-light">
@@ -28,7 +29,10 @@ const OrderComponent: FC<IProps> = ({order, isExpanded, onClick}) => {
                 <td>{order.manager || "null"}</td>
                 <td>{order.groupName || "null"}</td>
             </tr>
-            {isExpanded && <CommentsComponent order={order}/>}
+            {isExpanded && <CommentsComponent
+                order={order}
+                groups={groups}
+            />}
         </>
     );
 };

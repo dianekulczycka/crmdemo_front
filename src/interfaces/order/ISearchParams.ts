@@ -13,4 +13,5 @@ export interface ISearchParams {
     groupName?: string;
     startDate?: string;
     endDate?: string;
+    isAssignedToMe?: boolean;
 }
