@@ -30,7 +30,7 @@ export const FilterFormComponent: FC<IProps> = ({groups, onFilterChange}) => {
                     <input {...register("phone")} placeholder="Phone" className="form-control m-2"/>
 
                     <select {...register("status")} className="form-select m-2">
-                        <option value="">Satatus</option>
+                        <option value="">Status</option>
                         <option value="new">New</option>
                         <option value="in work">In Work</option>
                         <option value="agreed">Agreed</option>
