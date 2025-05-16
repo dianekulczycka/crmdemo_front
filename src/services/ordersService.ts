@@ -74,3 +74,20 @@ export const editOrder = async (id: number, data: IOrder): Promise<void> => {
         throw error;
     }
 };
+
+export const getExcel = async (params: Partial<ISearchParams>): Promise<Blob> => {
+    const token = getAccessToken();
+    try {
+        const response: AxiosResponse<Blob> = await axios.post(`${BASE_URL}/orders/excel`, params, {
+            responseType: 'blob',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error getting excel', error);
+        throw error;
+    }
+};

@@ -3,11 +3,13 @@ import OrdersComponent from "../components/order/OrdersComponent";
 import PaginationComponent from "../components/order/PaginationComponent";
 import PreloaderComponent from "../components/PreloaderComponent";
 import {useNavigate, useSearchParams} from "react-router-dom";
-import {getAllGroupNames, getAllOrders} from "../services/ordersService";
+import {getAllGroupNames, getAllOrders, getExcel} from "../services/ordersService";
 import {IOrdersPaginated} from "../interfaces/order/IOrderPaginated";
 import {IOrder} from "../interfaces/order/IOrder";
 import {ISearchParams} from "../interfaces/order/ISearchParams";
 import FilterFormComponent from "../components/order/FilterFormComponent";
+import {saveAs} from "file-saver";
+import dayjs from "dayjs";
 
 const OrdersPage: FC = () => {
     useNavigate();
@@ -40,7 +42,7 @@ const OrdersPage: FC = () => {
         isAssignedToMe: searchParams.get("isAssignedToMe") === "true" || undefined,
     };
 
-    useEffect(() => {
+    useEffect((): void => {
         setIsLoaded(false);
         getAllOrders(queryParams)
             .then((resp: IOrdersPaginated) => {
@@ -51,7 +53,7 @@ const OrdersPage: FC = () => {
             .catch(() => setIsLoaded(true));
     }, [searchParams]);
 
-    useEffect(() => {
+    useEffect((): void => {
         getAllGroupNames()
             .then((groups: string[]) => setGroups(groups.map(g => g.toUpperCase())))
             .catch(error => console.error("Error fetching groups", error));
@@ -72,7 +74,7 @@ const OrdersPage: FC = () => {
         setSearchParams(formattedParams);
     };
 
-    const updateSorting = (newOrder: string) => {
+    const updateSorting = (newOrder: string): void => {
         const newDirection: string =
             queryParams.order === newOrder && queryParams.direction === "asc" ? "desc" : "asc";
 
@@ -83,18 +85,45 @@ const OrdersPage: FC = () => {
         });
     };
 
+    const handleExportToExcel = (): void => {
+        const filters: { [key: string]: string | boolean | null } = {};
+
+        searchParams.forEach((value, key) => {
+            if (!["page", "order", "direction"].includes(key)) {
+                if (value === "") {
+                    filters[key] = null;
+                } else if (value === "true" || value === "false") {
+                    filters[key] = value === "true";
+                } else {
+                    filters[key] = value;
+                }
+            }
+        });
+
+        getExcel(filters)
+            .then(response => {
+                saveAs(response, `orders ${dayjs().format("DD.MM.YY")}.xlsx`);
+            })
+            .catch(error => console.error("Export error", error));
+    };
+
     return (
         <div>
             {isLoaded ? (
                 <div className="d-flex flex-column align-items-center justify-content-evenly">
-                    <FilterFormComponent groups={groups} onFilterChange={handleFilterChange}/>
+                    <FilterFormComponent
+                        groups={groups}
+                        onFilterChange={handleFilterChange}
+                        onExport={handleExportToExcel}
+                    />
 
                     {ordersPaginated.length > 0 ? (
                         <>
                             <OrdersComponent
                                 orders={ordersPaginated}
                                 groups={groups}
-                                onSort={updateSorting}/>
+                                onSort={updateSorting}
+                            />
                             <PaginationComponent
                                 total={total}
                                 page={page}

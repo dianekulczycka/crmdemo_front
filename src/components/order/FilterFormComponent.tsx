@@ -6,12 +6,13 @@ import dayjs from "dayjs";
 interface IProps {
     groups: string[];
     onFilterChange: (filters: Partial<ISearchParams>) => void;
+    onExport: () => void;
 }
 
-export const FilterFormComponent: FC<IProps> = ({groups, onFilterChange}) => {
+export const FilterFormComponent: FC<IProps> = ({groups, onFilterChange, onExport}) => {
     const {register, handleSubmit} = useForm<Partial<ISearchParams>>();
 
-    const onSubmit: SubmitHandler<Partial<ISearchParams>> = (data) => {
+    const onSearch: SubmitHandler<Partial<ISearchParams>> = (data) => {
         const formattedData = {
             ...data,
             startDate: data.startDate ? dayjs(data.startDate).format('YYYY-MM-DD') : undefined,
@@ -21,7 +22,7 @@ export const FilterFormComponent: FC<IProps> = ({groups, onFilterChange}) => {
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSearch)}>
             <div className="d-flex flex-column">
                 <div className="d-flex flex-row">
                     <input {...register("name")} placeholder="Name" className="form-control m-2"/>
@@ -85,9 +86,7 @@ export const FilterFormComponent: FC<IProps> = ({groups, onFilterChange}) => {
                     <input {...register("startDate")} type="date" className="form-control m-2"/>
                     <input {...register("endDate")} type="date" className="form-control m-2"/>
                     <button type="submit" className="btn btn-success m-2">Search</button>
-                    <button type="button" className="btn border-success m-2">
-                        Excel
-                    </button>
+                    <button type="button" onClick={onExport} className="btn border-success m-2">Excel</button>
                 </div>
             </div>
         </form>
