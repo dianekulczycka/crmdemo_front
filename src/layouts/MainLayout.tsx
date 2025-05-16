@@ -4,7 +4,7 @@ import HeaderComponent from "../components/HeaderComponent";
 
 const MainLayout: FC = () => {
     return (
-        <div className="fs-6 mx-5">
+        <div>
             <HeaderComponent/>
             <Outlet/>
         </div>
