@@ -3,10 +3,17 @@ import {Outlet} from "react-router-dom";
 import HeaderComponent from "../components/HeaderComponent";
 
 const MainLayout: FC = () => {
+    const isAuthed: boolean = !!localStorage.getItem("accessToken");
+
     return (
         <div>
-            <HeaderComponent/>
-            <Outlet/>
+            {
+                isAuthed &&
+                <>
+                    <HeaderComponent/>
+                    <Outlet/>
+                </>
+            }
         </div>
     );
 };
