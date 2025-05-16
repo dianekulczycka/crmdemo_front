@@ -60,10 +60,10 @@ export const getAllGroupNames = async (): Promise<string[]> => {
     }
 };
 
-export const editOrder = async (id: number, data: IOrder): Promise<void> => {
+export const editOrder = async (id: number, data: Partial<IOrder>): Promise<void> => {
     const token = getAccessToken();
     try {
-        await axios.put(`${BASE_URL}/orders/order/${id}`, data, {
+        await axios.patch(`${BASE_URL}/orders/order/${id}`, data, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`

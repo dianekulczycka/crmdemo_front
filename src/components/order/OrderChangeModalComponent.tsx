@@ -16,31 +16,37 @@ const OrderChangeModalComponent: FC<IProps> = ({onClose, order, isOpen, groups})
     const [newGroupName, setNewGroupName] = useState<string>('');
     const [selectedGroup, setSelectedGroup] = useState('');
     const [error, setError] = useState<string | null>(null);
-    const { control, handleSubmit } = useForm<IOrder>({defaultValues: order});
+    const [updatedFields, setUpdatedFields] = useState<Partial<IOrder>>({});
+    const { control, handleSubmit } = useForm({defaultValues: order});
     const navigate = useNavigate();
 
-    const onSubmit = async (data: IOrder) => {
-        const groupName = newGroupName.trim() ? newGroupName.trim().toUpperCase() : selectedGroup;
+    const onSubmit = async () => {
+        if (newGroupName.trim() || selectedGroup) {
+            const groupName = newGroupName.trim()
+                ? newGroupName.trim().toUpperCase()
+                : selectedGroup;
 
-        if (!groupName) {
-            setError("Select group or create new one");
-            return;
+            if (!groupName) {
+                setError("Select group or create new one");
+                return;
+            }
+
+            if (newGroupName.trim() && groups.includes(groupName)) {
+                setError("This name exists, choose from options");
+                return;
+            }
+
+            updatedFields.groupName = groupName;
         }
 
-        if (newGroupName.trim() && groups.includes(groupName)) {
-            setError("This name exists, choose from options");
-            return;
-        }
 
-        const updatedOrder = {
-            ...data,
-            groupName,
-            sum: Number(data.sum) || 0,
-            alreadyPaid: Number(data.alreadyPaid) || 0,
-            age: Number(data.age) || 0
-        };
-
-        await editOrder(order.id, updatedOrder);
+        await editOrder(order.id, {
+            ...updatedFields,
+            groupName: newGroupName,
+            sum: updatedFields.sum ?? 0,
+            alreadyPaid: updatedFields.alreadyPaid ?? 0,
+            age: updatedFields.age ?? 0
+        });
 
         onClose();
         navigate(0);
@@ -60,6 +66,7 @@ const OrderChangeModalComponent: FC<IProps> = ({onClose, order, isOpen, groups})
                             setSelectedGroup(e.target.value);
                             setNewGroupName('');
                             setError('');
+                            setUpdatedFields(prev => ({ ...prev, groupName: e.target.value || null }));
                         }}
                         disabled={!!newGroupName.trim()}>
                         {groups.map((name, i) => <option key={i} value={name}>{name}</option>)}
@@ -73,6 +80,7 @@ const OrderChangeModalComponent: FC<IProps> = ({onClose, order, isOpen, groups})
                             setNewGroupName(e.target.value);
                             setSelectedGroup('');
                             setError('');
+                            setUpdatedFields(prev => ({ ...prev, groupName: e.target.value.trim() ? e.target.value.trim().toUpperCase() : null }));
                         }}
                         placeholder="new group name"
                         disabled={!!selectedGroup}
@@ -85,7 +93,17 @@ const OrderChangeModalComponent: FC<IProps> = ({onClose, order, isOpen, groups})
                         <Controller
                             name="name"
                             control={control}
-                            render={({field}) => <input {...field} className="form-control" value={field.value ?? ""}/>}
+                            render={({ field }) => (
+                                <input
+                                    {...field}
+                                    className="form-control"
+                                    onChange={(e) => {
+                                        field.onChange(e);
+                                        setUpdatedFields(prev => ({ ...prev, name: e.target.value || null }));
+                                    }}
+                                    value={field.value ?? ""}
+                                />
+                            )}
                         />
                     </div>
 
@@ -94,7 +112,17 @@ const OrderChangeModalComponent: FC<IProps> = ({onClose, order, isOpen, groups})
                         <Controller
                             name="surname"
                             control={control}
-                            render={({field}) => <input {...field} className="form-control" value={field.value ?? ""}/>}
+                            render={({ field }) => (
+                                <input
+                                    {...field}
+                                    className="form-control"
+                                    onChange={(e) => {
+                                        field.onChange(e);
+                                        setUpdatedFields(prev => ({ ...prev, surname: e.target.value || null }));
+                                    }}
+                                    value={field.value ?? ""}
+                                />
+                            )}
                         />
                     </div>
 
@@ -103,7 +131,17 @@ const OrderChangeModalComponent: FC<IProps> = ({onClose, order, isOpen, groups})
                         <Controller
                             name="email"
                             control={control}
-                            render={({field}) => <input {...field} className="form-control" value={field.value ?? ""}/>}
+                            render={({ field }) => (
+                                <input
+                                    {...field}
+                                    className="form-control"
+                                    onChange={(e) => {
+                                        field.onChange(e);
+                                        setUpdatedFields(prev => ({ ...prev, email: e.target.value || null }));
+                                    }}
+                                    value={field.value ?? ""}
+                                />
+                            )}
                         />
                     </div>
 
@@ -112,7 +150,17 @@ const OrderChangeModalComponent: FC<IProps> = ({onClose, order, isOpen, groups})
                         <Controller
                             name="phone"
                             control={control}
-                            render={({field}) => <input {...field} className="form-control" value={field.value ?? ""}/>}
+                            render={({ field }) => (
+                                <input
+                                    {...field}
+                                    className="form-control"
+                                    onChange={(e) => {
+                                        field.onChange(e);
+                                        setUpdatedFields(prev => ({ ...prev, phone: e.target.value || null }));
+                                    }}
+                                    value={field.value ?? ""}
+                                />
+                            )}
                         />
                     </div>
 
@@ -121,8 +169,18 @@ const OrderChangeModalComponent: FC<IProps> = ({onClose, order, isOpen, groups})
                         <Controller
                             name="age"
                             control={control}
-                            render={({field}) => (
-                                <input {...field} type="number" className="form-control" value={field.value ?? 0}/>
+                            render={({ field }) => (
+                                <input
+                                    {...field}
+                                    type="number"
+                                    className="form-control"
+                                    onChange={(e) => {
+                                        const value = e.target.value === "" ? null : Number(e.target.value);
+                                        field.onChange(value);
+                                        setUpdatedFields(prev => ({ ...prev, age: value }));
+                                    }}
+                                    value={field.value === null ? "" : field.value}
+                                />
                             )}
                         />
                     </div>
@@ -132,8 +190,16 @@ const OrderChangeModalComponent: FC<IProps> = ({onClose, order, isOpen, groups})
                         <Controller
                             name="status"
                             control={control}
-                            render={({field}) => (
-                                <select {...field} className="form-select" value={field.value ?? ""}>
+                            render={({ field }) => (
+                                <select
+                                    {...field}
+                                    className="form-select"
+                                    onChange={(e) => {
+                                        field.onChange(e);
+                                        setUpdatedFields(prev => ({ ...prev, status: e.target.value || null }));
+                                    }}
+                                    value={field.value ?? ""}
+                                >
                                     <option value="New">New</option>
                                     <option value="In Work">In Work</option>
                                     <option value="Agreed">Agreed</option>
@@ -149,8 +215,16 @@ const OrderChangeModalComponent: FC<IProps> = ({onClose, order, isOpen, groups})
                         <Controller
                             name="course"
                             control={control}
-                            render={({field}) => (
-                                <select {...field} className="form-select" value={field.value ?? ""}>
+                            render={({ field }) => (
+                                <select
+                                    {...field}
+                                    className="form-select"
+                                    onChange={(e) => {
+                                        field.onChange(e);
+                                        setUpdatedFields(prev => ({ ...prev, course: e.target.value || null }));
+                                    }}
+                                    value={field.value ?? ""}
+                                >
                                     <option value="FS">FS</option>
                                     <option value="QACX">QACX</option>
                                     <option value="JCX">JCX</option>
@@ -167,8 +241,16 @@ const OrderChangeModalComponent: FC<IProps> = ({onClose, order, isOpen, groups})
                         <Controller
                             name="courseFormat"
                             control={control}
-                            render={({field}) => (
-                                <select {...field} className="form-select" value={field.value ?? ""}>
+                            render={({ field }) => (
+                                <select
+                                    {...field}
+                                    className="form-select"
+                                    onChange={(e) => {
+                                        field.onChange(e);
+                                        setUpdatedFields(prev => ({ ...prev, courseFormat: e.target.value || null }));
+                                    }}
+                                    value={field.value ?? ""}
+                                >
                                     <option value="static">static</option>
                                     <option value="online">online</option>
                                 </select>
@@ -181,8 +263,16 @@ const OrderChangeModalComponent: FC<IProps> = ({onClose, order, isOpen, groups})
                         <Controller
                             name="courseType"
                             control={control}
-                            render={({field}) => (
-                                <select {...field} className="form-select" value={field.value ?? ""}>
+                            render={({ field }) => (
+                                <select
+                                    {...field}
+                                    className="form-select"
+                                    onChange={(e) => {
+                                        field.onChange(e);
+                                        setUpdatedFields(prev => ({ ...prev, courseType: e.target.value || null }));
+                                    }}
+                                    value={field.value ?? ""}
+                                >
                                     <option value="pro">pro</option>
                                     <option value="minimal">minimal</option>
                                     <option value="premium">premium</option>
@@ -199,7 +289,17 @@ const OrderChangeModalComponent: FC<IProps> = ({onClose, order, isOpen, groups})
                             name="sum"
                             control={control}
                             render={({ field }) => (
-                                <input {...field} type="number" className="form-control" value={field.value ?? 0} />
+                                <input
+                                    {...field}
+                                    type="number"
+                                    className="form-control"
+                                    onChange={(e) => {
+                                        const value = e.target.value === "" ? null : Number(e.target.value);
+                                        field.onChange(value);
+                                        setUpdatedFields(prev => ({ ...prev, sum: value }));
+                                    }}
+                                    value={field.value === null ? "" : field.value}
+                                />
                             )}
                         />
                     </div>
@@ -209,8 +309,18 @@ const OrderChangeModalComponent: FC<IProps> = ({onClose, order, isOpen, groups})
                         <Controller
                             name="alreadyPaid"
                             control={control}
-                            render={({field}) => (
-                                <input {...field} type="number" className="form-control" value={field.value ?? 0}/>
+                            render={({ field }) => (
+                                <input
+                                    {...field}
+                                    type="number"
+                                    className="form-control"
+                                    onChange={(e) => {
+                                        const value = e.target.value === "" ? null : Number(e.target.value);
+                                        field.onChange(value);
+                                        setUpdatedFields(prev => ({ ...prev, alreadyPaid: value }));
+                                    }}
+                                    value={field.value === null ? "" : field.value}
+                                />
                             )}
                         />
                     </div>
