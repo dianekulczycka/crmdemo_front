@@ -27,15 +27,15 @@ const CommentsComponent: FC<IProps> = ({order, groups}) => {
             .catch(() => setIsLoaded(true));
     }, [order.id]);
 
-    const handleCommentAdded = (newComment: IComment) => {
+    const onCommentAdded = (newComment: IComment) => {
         setComments([...comments, newComment]);
     };
 
-    const handleModalOpen = () => {
+    const onModalOpen = () => {
         setIsModalOpen(true);
     };
 
-    const handleModalClose = () => {
+    const onModalClose = () => {
         setIsModalOpen(false);
     };
 
@@ -56,10 +56,10 @@ const CommentsComponent: FC<IProps> = ({order, groups}) => {
                                 ))}
                             </ul>
                         )}
-                        <CommentFormComponent orderId={order.id} onCommentAdded={handleCommentAdded}/>
+                        <CommentFormComponent orderId={order.id} onCommentAdded={onCommentAdded}/>
                     </td>
                     <td colSpan={1}>
-                        <button className="btn btn-success m-4 p-2" onClick={handleModalOpen}>
+                        <button className="btn btn-success m-4 p-2" onClick={onModalOpen}>
                             edit
                         </button>
                     </td>
@@ -71,7 +71,7 @@ const CommentsComponent: FC<IProps> = ({order, groups}) => {
                     <OrderChangeModalComponent
                         groups={groups}
                         order={order}
-                        onClose={handleModalClose}
+                        onClose={onModalClose}
                         isOpen={isModalOpen}
                     />
                 </div>

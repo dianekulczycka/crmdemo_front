@@ -9,7 +9,16 @@ interface IFormData {
 }
 
 const AuthFormComponent: FC = () => {
-    const {register, handleSubmit, formState: {errors}} = useForm<IFormData>();
+    const {
+        register,
+        handleSubmit,
+        formState: {errors}
+    } = useForm<IFormData>({
+        defaultValues: {
+            email: "admin@gmail.com",
+            password: "admin",
+        }
+    });
     const navigate = useNavigate();
 
     const onSubmit: SubmitHandler<IFormData> = async (data) => {
@@ -34,7 +43,7 @@ const AuthFormComponent: FC = () => {
                     })}
                     className="m-2"
                     type="email"
-                    placeholder={"admin@gmail.com"}
+                    placeholder={"email"}
                 />
                 {errors.email && <span className="text-danger">{errors.email.message}</span>}
 
@@ -42,7 +51,7 @@ const AuthFormComponent: FC = () => {
                     {...register("password", {required: "password required"})}
                     className="m-2"
                     type="password"
-                    placeholder={"admin"}
+                    placeholder={"password"}
                 />
                 {errors.password && <span className="text-danger">{errors.password.message}</span>}
 

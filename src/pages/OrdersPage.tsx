@@ -50,7 +50,6 @@ const OrdersPage: FC = () => {
                 setTotal(resp.total);
                 setIsLoaded(true);
             })
-            .catch(() => setIsLoaded(true));
     }, [searchParams]);
 
     useEffect((): void => {
@@ -59,7 +58,7 @@ const OrdersPage: FC = () => {
             .catch(error => console.error("Error fetching groups", error));
     }, [setGroups]);
 
-    const handleFilterChange = (filters: Partial<ISearchParams>) => {
+    const onFilterChange = (filters: Partial<ISearchParams>) => {
         const formattedParams: { [key: string]: string } = {};
 
         Object.entries(filters).forEach(([key, value]) => {
@@ -85,7 +84,7 @@ const OrdersPage: FC = () => {
         });
     };
 
-    const handleExportToExcel = (): void => {
+    const onExportToExcel = (): void => {
         const filters: { [key: string]: string | boolean | null } = {};
 
         searchParams.forEach((value, key) => {
@@ -113,8 +112,8 @@ const OrdersPage: FC = () => {
                 <div className="d-flex flex-column align-items-center justify-content-evenly">
                     <FilterFormComponent
                         groups={groups}
-                        onFilterChange={handleFilterChange}
-                        onExport={handleExportToExcel}
+                        onFilterChange={onFilterChange}
+                        onExport={onExportToExcel}
                     />
 
                     {ordersPaginated.length > 0 ? (

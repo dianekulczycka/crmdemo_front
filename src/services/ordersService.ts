@@ -5,6 +5,7 @@ import {BASE_URL} from "./consts";
 import {IOrdersPaginated} from "../interfaces/order/IOrderPaginated";
 import {IOrder} from "../interfaces/order/IOrder";
 import {ISearchParams} from "../interfaces/order/ISearchParams";
+import {IStat} from "../interfaces/order/IStat";
 
 axios.interceptors.request.use(
     (config) => {
@@ -56,6 +57,21 @@ export const getAllGroupNames = async (): Promise<string[]> => {
         return response.data;
     } catch (error) {
         console.error("Failed to get group names", error);
+        throw error;
+    }
+};
+
+export const getStats = async (): Promise<IStat[]> => {
+    const token = getAccessToken();
+    try {
+        const response: AxiosResponse<IStat[]> = await axios.get(`${BASE_URL}/orders/stats`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Failed to get order stats", error);
         throw error;
     }
 };
