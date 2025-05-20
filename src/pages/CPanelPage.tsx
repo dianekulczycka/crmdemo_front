@@ -3,9 +3,12 @@ import {IStat} from "../interfaces/order/IStat";
 import {getStats} from "../services/ordersService";
 import PreloaderComponent from "../components/PreloaderComponent";
 import CPanelComponent from "../components/order/CPanelComponent";
+import {IManager} from "../interfaces/manager/IManager";
+import {getManagers} from "../services/managerService";
 
 const CPanelPage: FC = () => {
     const [stats, setStats] = useState<IStat[]>([]);
+    const [managers, setManagers] = useState<IManager[]>([]);
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
     useEffect((): void => {
@@ -17,9 +20,18 @@ const CPanelPage: FC = () => {
             })
     }, []);
 
+    useEffect((): void => {
+        setIsLoaded(false);
+        getManagers()
+            .then((data) => {
+                setManagers(data.data);
+                setIsLoaded(true);
+            })
+    }, []);
+
     return (
         <div className="d-flex flex-column align-items-center justify-content-evenly p-4">
-            {!isLoaded ? <PreloaderComponent/> : <CPanelComponent stats={stats}/>}
+            {!isLoaded ? <PreloaderComponent/> : <CPanelComponent managers={managers} stats={stats}/>}
         </div>
     );
 };

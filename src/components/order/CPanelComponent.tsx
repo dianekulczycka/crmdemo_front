@@ -1,31 +1,43 @@
 import {FC, useState} from "react";
 import {IStat} from "../../interfaces/order/IStat";
 import {SubmitHandler, useForm} from "react-hook-form";
-import {CreateManagerModalComponent} from "./CreateManagerModalComponent";
-import {IFormData} from "../../interfaces/order/ICreateManagerFormData";
+import {CreateManagerModalComponent} from "../modals/CreateManagerModalComponent";
+import {ICreateManagerFormData} from "../../interfaces/manager/ICreateManagerFormData";
+import {addManager} from "../../services/managerService";
+import OrdersStatsComponent from "../cpanel/OrdersStatsComponent";
+import {IManager} from "../../interfaces/manager/IManager";
+import ManagersListComponent from "../cpanel/ManagersListComponent";
+import {Button} from "react-bootstrap";
+import {useNavigate} from "react-router-dom";
 
 interface IProps {
     stats: IStat[];
+    managers: IManager[];
 }
 
-const CPanelComponent: FC<IProps> = ({stats}) => {
+const CPanelComponent: FC<IProps> = ({stats, managers}) => {
+    const navigate = useNavigate();
     const [isModalOpen, setModalOpen] = useState(false);
 
     const {
         control,
         handleSubmit,
         reset
-    } = useForm<IFormData>({
+    } = useForm<ICreateManagerFormData>({
         defaultValues: {
-            email: "managerOne@gmail.com",
+            email: "manager@gmail.com",
             name: "manager",
             surname: "managerovich",
         }
     });
 
-    const onSubmit: SubmitHandler<IFormData> = (data) => {
-        setModalOpen(false);
-        reset();
+    const onSubmit: SubmitHandler<ICreateManagerFormData> = (data) => {
+        addManager(data)
+            .then(() => {
+                setModalOpen(false);
+                reset();
+                navigate(0);
+            })
     };
 
     const onClose = () => {
@@ -34,35 +46,28 @@ const CPanelComponent: FC<IProps> = ({stats}) => {
     };
 
     return (
-        <div className="d-flex flex-row align-items-center justify-content-evenly w-75">
-            <div className="w-25">
-                <button className="btn btn-success my-3 fs-4" onClick={() => setModalOpen(true)}>
-                    Create manager
-                </button>
-            </div>
+        <>
+            <div className="d-flex flex-row align-items-center justify-content-evenly w-75">
+                <div className="w-25">
+                    <Button className="btn btn-success my-3 fs-4" onClick={() => setModalOpen(true)}>
+                        Create manager
+                    </Button>
+                </div>
 
-            <div>
-                <h3>Orders:</h3>
-                {stats.length > 0 ? (
-                    <ul className="list-unstyled">
-                        {stats.map(({name, count}) => (
-                            <li key={name} className="list-group-item d-flex justify-content-between">
-                                <h4>{name}: {count}</h4>
-                            </li>
-                        ))}
-                    </ul>
-                ) : (
-                    <h3 className="text-danger">No stats</h3>
-                )}
-
-                <CreateManagerModalComponent
-                    isOpen={isModalOpen}
-                    onClose={onClose}
-                    onSubmit={handleSubmit(onSubmit)}
-                    control={control}
-                />
+                <div>
+                    <OrdersStatsComponent stats={stats}/>
+                    <CreateManagerModalComponent
+                        isOpen={isModalOpen}
+                        onClose={onClose}
+                        onSubmit={handleSubmit(onSubmit)}
+                        control={control}
+                    />
+                </div>
             </div>
-        </div>
+            <div className="d-flex flex-row align-items-center w-100">
+                <ManagersListComponent managers={managers}/>
+            </div>
+        </>
     );
 };
 

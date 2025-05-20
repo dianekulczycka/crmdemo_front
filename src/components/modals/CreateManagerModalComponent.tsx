@@ -1,13 +1,13 @@
 import {FC} from "react";
-import {Modal} from "react-bootstrap";
+import {Button, Modal} from "react-bootstrap";
 import {Control, Controller} from "react-hook-form";
-import {IFormData} from "../../interfaces/order/ICreateManagerFormData";
+import {ICreateManagerFormData} from "../../interfaces/manager/ICreateManagerFormData";
 
 export interface IProps {
     isOpen: boolean;
     onClose: () => void;
     onSubmit: () => void;
-    control: Control<IFormData>;
+    control: Control<ICreateManagerFormData>;
 }
 
 export const CreateManagerModalComponent: FC<IProps> = ({isOpen, onClose, onSubmit, control}) => {
@@ -46,9 +46,7 @@ export const CreateManagerModalComponent: FC<IProps> = ({isOpen, onClose, onSubm
                             )}
                         />
                     </div>
-                    <button type="submit" className="btn btn-success">
-                        create
-                    </button>
+                    <Button type="submit" className="btn btn-success">create</Button>
                 </form>
             </Modal.Body>
         </Modal>

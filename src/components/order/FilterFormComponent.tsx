@@ -2,6 +2,7 @@ import React, {FC} from "react";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {ISearchParams} from "../../interfaces/order/ISearchParams";
 import dayjs from "dayjs";
+import {Button} from "react-bootstrap";
 
 interface IProps {
     groups: string[];
@@ -85,8 +86,8 @@ export const FilterFormComponent: FC<IProps> = ({groups, onFilterChange, onExpor
 
                     <input {...register("startDate")} type="date" className="form-control m-2"/>
                     <input {...register("endDate")} type="date" className="form-control m-2"/>
-                    <button type="submit" className="btn btn-success m-2">Search</button>
-                    <button type="button" onClick={onExport} className="btn border-success m-2">Excel</button>
+                    <Button type="submit" className="btn btn-success m-2">Search</Button>
+                    <Button type="button" onClick={onExport} className="btn btn-success m-2">Excel</Button>
                 </div>
             </div>
         </form>

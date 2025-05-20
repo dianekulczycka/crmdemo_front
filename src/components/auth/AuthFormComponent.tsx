@@ -2,6 +2,7 @@ import React, {FC} from "react";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {useNavigate} from "react-router-dom";
 import {login} from "../../services/authService";
+import {Button} from "react-bootstrap";
 
 interface IFormData {
     email: string;
@@ -55,9 +56,7 @@ const AuthFormComponent: FC = () => {
                 />
                 {errors.password && <span className="text-danger">{errors.password.message}</span>}
 
-                <button type="submit" className="btn btn-success m-2">
-                    Login
-                </button>
+                <Button type="submit" className="btn btn-success m-2">Login</Button>
             </form>
         </div>
     );

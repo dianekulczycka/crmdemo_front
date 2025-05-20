@@ -1,10 +1,10 @@
 import {FC, useEffect, useState} from "react";
 import OrdersComponent from "../components/order/OrdersComponent";
-import PaginationComponent from "../components/order/PaginationComponent";
+import PaginationComponent from "../components/order/pagination/PaginationComponent";
 import PreloaderComponent from "../components/PreloaderComponent";
 import {useNavigate, useSearchParams} from "react-router-dom";
 import {getAllGroupNames, getAllOrders, getExcel} from "../services/ordersService";
-import {IOrdersPaginated} from "../interfaces/order/IOrderPaginated";
+import {IPaginationResponse} from "../interfaces/order/IPaginationResponse";
 import {IOrder} from "../interfaces/order/IOrder";
 import {ISearchParams} from "../interfaces/order/ISearchParams";
 import FilterFormComponent from "../components/order/FilterFormComponent";
@@ -45,7 +45,7 @@ const OrdersPage: FC = () => {
     useEffect((): void => {
         setIsLoaded(false);
         getAllOrders(queryParams)
-            .then((resp: IOrdersPaginated) => {
+            .then((resp: IPaginationResponse<IOrder>) => {
                 setOrdersPaginated(resp.data);
                 setTotal(resp.total);
                 setIsLoaded(true);

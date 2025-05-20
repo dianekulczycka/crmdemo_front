@@ -2,7 +2,7 @@ import axios, {AxiosResponse} from "axios";
 import {getAccessToken} from "./tokenService";
 import {refreshAccessToken} from "./authService";
 import {BASE_URL} from "./consts";
-import {IOrdersPaginated} from "../interfaces/order/IOrderPaginated";
+import {IPaginationResponse} from "../interfaces/order/IPaginationResponse";
 import {IOrder} from "../interfaces/order/IOrder";
 import {ISearchParams} from "../interfaces/order/ISearchParams";
 import {IStat} from "../interfaces/order/IStat";
@@ -34,14 +34,13 @@ axios.interceptors.response.use(
     }
 );
 
-export const getAllOrders = async (params: ISearchParams): Promise<IOrdersPaginated> => {
-    const token = getAccessToken();
+export const getAllOrders = async (params: ISearchParams): Promise<IPaginationResponse<IOrder>> => {
     try {
-        const response: AxiosResponse<IOrdersPaginated> = await axios.get(`${BASE_URL}/orders/`, {
+        const response: AxiosResponse<IPaginationResponse<IOrder>> = await axios.get(`${BASE_URL}/orders/`, {
             params,
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
+                'Authorization': `Bearer ${getAccessToken()}`,
             },
         });
         return response.data;
@@ -62,11 +61,10 @@ export const getAllGroupNames = async (): Promise<string[]> => {
 };
 
 export const getStats = async (): Promise<IStat[]> => {
-    const token = getAccessToken();
     try {
         const response: AxiosResponse<IStat[]> = await axios.get(`${BASE_URL}/orders/stats`, {
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${getAccessToken()}`
             }
         });
         return response.data;

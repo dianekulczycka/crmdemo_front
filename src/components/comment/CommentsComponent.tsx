@@ -5,7 +5,8 @@ import {getAllComments} from "../../services/commentsService";
 import CommentFormComponent from "./CommentFormComponent";
 import CommentComponent from "./CommentComponent";
 import PreloaderComponent from "../PreloaderComponent";
-import OrderChangeModalComponent from "../order/OrderChangeModalComponent";
+import OrderChangeModalComponent from "../modals/OrderChangeModalComponent";
+import {Button} from "react-bootstrap";
 
 interface IProps {
     order: IOrder;
@@ -59,9 +60,7 @@ const CommentsComponent: FC<IProps> = ({order, groups}) => {
                         <CommentFormComponent orderId={order.id} onCommentAdded={onCommentAdded}/>
                     </td>
                     <td colSpan={1}>
-                        <button className="btn btn-success m-4 p-2" onClick={onModalOpen}>
-                            edit
-                        </button>
+                        <Button className="btn btn-success m-4 p-2" onClick={onModalOpen}>edit</Button>
                     </td>
                 </tr>) : <PreloaderComponent/>
             }

@@ -2,6 +2,7 @@ import {FC} from "react";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {addComment} from "../../services/commentsService";
 import {IComment} from "../../interfaces/comment/IComment";
+import {Button} from "react-bootstrap";
 
 interface IProps {
     orderId: number;
@@ -32,7 +33,7 @@ const CommentFormComponent: FC<IProps> = ({orderId, onCommentAdded}) => {
             placeholder="comment"
         />
             </div>
-            <button type="submit" className="btn btn-success float-end">send</button>
+            <Button type="submit" className="btn btn-success float-end">send</Button>
         </form>
     );
 };

@@ -1,5 +1,6 @@
 import React, {FC} from 'react';
 import {Link, useNavigate} from "react-router-dom";
+import {Button} from "react-bootstrap";
 
 const HeaderComponent: FC = () => {
     const navigate = useNavigate();
@@ -20,7 +21,7 @@ const HeaderComponent: FC = () => {
                     <Link to="/cpanel" className="btn btn-success m-2 fs-6">cPanel</Link>
                 </li>}
                 <li>
-                    <button className="btn btn-outline-success m-2 fs-6" onClick={onLogout}>Log out</button>
+                    <Button className="btn btn-success m-2 fs-6" onClick={onLogout}>Log out</Button>
                 </li>
             </ul>
         </div>
