@@ -1,8 +1,9 @@
 import React, {FC} from "react";
 import {Outlet} from "react-router-dom";
+import {getAccessToken} from "../services/tokenService";
 
 const AuthLayout: FC = () => {
-    const isAuthed: boolean = !!localStorage.getItem("accessToken");
+    const isAuthed: boolean = !!getAccessToken();
 
     return (
         <>

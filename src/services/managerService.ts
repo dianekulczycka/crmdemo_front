@@ -3,14 +3,14 @@ import {BASE_URL} from "./consts";
 import {ICreateManagerFormData} from "../interfaces/manager/ICreateManagerFormData";
 import {IManager} from "../interfaces/manager/IManager";
 import {getAccessToken} from "./tokenService";
-import {IPaginationResponse} from "../interfaces/order/IPaginationResponse";
+import {IPaginationResponse} from "../interfaces/pagination/IPaginationResponse";
+import {ISearchParams} from "../interfaces/order/ISearchParams";
 
-export const getManagers = async (): Promise<IPaginationResponse<IManager>> => {
+export const getManagers = async (params: ISearchParams): Promise<IPaginationResponse<IManager>> => {
     try {
-        const response: AxiosResponse<IPaginationResponse<IManager>> = await axios.get(`${BASE_URL}/managers?page=1`, {
-            headers: {
-                Authorization: `Bearer ${getAccessToken()}`
-            }
+        const response: AxiosResponse<IPaginationResponse<IManager>> = await axios.get(`${BASE_URL}/managers`, {
+            params,
+            headers: { Authorization: `Bearer ${getAccessToken()}`}
         });
         return response.data;
     } catch (error) {
@@ -33,3 +33,17 @@ export const addManager = async (data: ICreateManagerFormData): Promise<void> =>
         throw error;
     }
 };
+
+export const banManager = async (id: number, ban: boolean): Promise<void> => {
+    try {
+        const response: AxiosResponse<void> = await axios.put(
+            `${BASE_URL}/managers/ban/${id}`,
+            {params: {ban}}
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Error banning manager", error);
+        throw error;
+    }
+};
+

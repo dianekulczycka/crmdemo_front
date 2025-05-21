@@ -2,7 +2,7 @@ import axios, {AxiosResponse} from "axios";
 import {getAccessToken} from "./tokenService";
 import {refreshAccessToken} from "./authService";
 import {BASE_URL} from "./consts";
-import {IPaginationResponse} from "../interfaces/order/IPaginationResponse";
+import {IPaginationResponse} from "../interfaces/pagination/IPaginationResponse";
 import {IOrder} from "../interfaces/order/IOrder";
 import {ISearchParams} from "../interfaces/order/ISearchParams";
 import {IStat} from "../interfaces/order/IStat";

@@ -4,9 +4,9 @@ import {SubmitHandler, useForm} from "react-hook-form";
 import {CreateManagerModalComponent} from "../modals/CreateManagerModalComponent";
 import {ICreateManagerFormData} from "../../interfaces/manager/ICreateManagerFormData";
 import {addManager} from "../../services/managerService";
-import OrdersStatsComponent from "../cpanel/OrdersStatsComponent";
+import OrdersStatsComponent from "./order stats/OrdersStatsComponent";
 import {IManager} from "../../interfaces/manager/IManager";
-import ManagersListComponent from "../cpanel/ManagersListComponent";
+import ManagersListComponent from "./manager list/ManagersListComponent";
 import {Button} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
 
@@ -46,28 +46,19 @@ const CPanelComponent: FC<IProps> = ({stats, managers}) => {
     };
 
     return (
-        <>
-            <div className="d-flex flex-row align-items-center justify-content-evenly w-75">
-                <div className="w-25">
-                    <Button className="btn btn-success my-3 fs-4" onClick={() => setModalOpen(true)}>
-                        Create manager
-                    </Button>
-                </div>
-
-                <div>
-                    <OrdersStatsComponent stats={stats}/>
-                    <CreateManagerModalComponent
-                        isOpen={isModalOpen}
-                        onClose={onClose}
-                        onSubmit={handleSubmit(onSubmit)}
-                        control={control}
-                    />
-                </div>
-            </div>
-            <div className="d-flex flex-row align-items-center w-100">
-                <ManagersListComponent managers={managers}/>
-            </div>
-        </>
+        <div className="d-flex flex-column align-items-start w-100">
+            <OrdersStatsComponent stats={stats}/>
+            <Button className="btn btn-success mx-5 fs-4" onClick={() => setModalOpen(true)}>
+                Create manager
+            </Button>
+            <ManagersListComponent managers={managers}/>
+            <CreateManagerModalComponent
+                isOpen={isModalOpen}
+                onClose={onClose}
+                onSubmit={handleSubmit(onSubmit)}
+                control={control}
+            />
+        </div>
     );
 };
 

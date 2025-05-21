@@ -1,10 +1,10 @@
 import {FC, useEffect, useState} from "react";
 import OrdersComponent from "../components/order/OrdersComponent";
-import PaginationComponent from "../components/order/pagination/PaginationComponent";
+import PaginationComponent from "../components/pagination/PaginationComponent";
 import PreloaderComponent from "../components/PreloaderComponent";
 import {useNavigate, useSearchParams} from "react-router-dom";
 import {getAllGroupNames, getAllOrders, getExcel} from "../services/ordersService";
-import {IPaginationResponse} from "../interfaces/order/IPaginationResponse";
+import {IPaginationResponse} from "../interfaces/pagination/IPaginationResponse";
 import {IOrder} from "../interfaces/order/IOrder";
 import {ISearchParams} from "../interfaces/order/ISearchParams";
 import FilterFormComponent from "../components/order/FilterFormComponent";
@@ -19,6 +19,7 @@ const OrdersPage: FC = () => {
     const [groups, setGroups] = useState<string[]>([]);
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
     const [total, setTotal] = useState<number>(0);
+    const [perPage, setPerPage] = useState<number>(0);
 
     const page = Number(searchParams.get("page")) || 1;
     const order = searchParams.get("order") || "id";
@@ -48,6 +49,7 @@ const OrdersPage: FC = () => {
             .then((resp: IPaginationResponse<IOrder>) => {
                 setOrdersPaginated(resp.data);
                 setTotal(resp.total);
+                setPerPage(resp.perPage);
                 setIsLoaded(true);
             })
     }, [searchParams]);
@@ -125,6 +127,7 @@ const OrdersPage: FC = () => {
                             />
                             <PaginationComponent
                                 total={total}
+                                perPage={perPage}
                                 page={page}
                                 setSearchParams={setSearchParams}
                             />

@@ -1,7 +1,7 @@
 import axios, {AxiosResponse} from "axios";
 import {IAuthResponse} from "../interfaces/auth/IAuthResponse";
 import {IAuthRequest} from "../interfaces/auth/IAuthRequest";
-import {getRefreshToken, setAccessToken, setRefreshToken} from "./tokenService";
+import {getRefreshToken, setAccessToken, setRefreshToken, setUserName, setUserRole} from "./tokenService";
 import {BASE_URL} from "./consts";
 
 export const login = async (authData: IAuthRequest): Promise<void> => {
@@ -13,6 +13,8 @@ export const login = async (authData: IAuthRequest): Promise<void> => {
         );
         setAccessToken(response.data.accessToken);
         setRefreshToken(response.data.refreshToken);
+        setUserName(response.data.name);
+        setUserRole(response.data.role);
     } catch (error) {
         console.error("Error auth", error);
         throw new Error("Auth fail");

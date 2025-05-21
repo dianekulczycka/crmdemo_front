@@ -1,5 +1,6 @@
 import React, {FC} from 'react';
-import {IStat} from "../../interfaces/order/IStat";
+import {IStat} from "../../../interfaces/order/IStat";
+import OrderStatsItemComponent from "./OrderStatsItemComponent";
 
 interface IProps {
     stats: IStat[];
@@ -7,15 +8,11 @@ interface IProps {
 
 const OrdersStatsComponent: FC<IProps> = ({stats}) => {
     return (
-        <div>
+        <div className="d-flex flex-column justify-content-evenly w-100 mx-5">
             <h3>Orders:</h3>
             {stats.length > 0 ? (
                 <ul className="list-unstyled">
-                    {stats.map(({name, count}) => (
-                        <li key={name} className="list-group-item d-flex justify-content-between">
-                            <h4>{name}: {count}</h4>
-                        </li>
-                    ))}
+                    {stats.map(stat => <OrderStatsItemComponent stat={stat}/>)}
                 </ul>
             ) : (
                 <h3 className="text-danger">No stats</h3>
