@@ -7,7 +7,7 @@ interface IProps {
 
 const OrderStatsItemComponent: FC<IProps> = ({stat}) => {
     return (
-        <li key={stat.name} className="list-group-item d-flex justify-content-between">
+        <li className="list-group-item d-flex justify-content-between">
             <h5>{stat.name}: {stat.count}</h5>
         </li>
     );

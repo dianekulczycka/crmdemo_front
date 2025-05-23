@@ -2,7 +2,7 @@ import {FC, useState} from "react";
 import {IStat} from "../../interfaces/order/IStat";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {CreateManagerModalComponent} from "../modals/CreateManagerModalComponent";
-import {ICreateManagerFormData} from "../../interfaces/manager/ICreateManagerFormData";
+import {ICreateManagerRequest} from "../../interfaces/manager/ICreateManagerRequest";
 import {addManager} from "../../services/managerService";
 import OrdersStatsComponent from "./order stats/OrdersStatsComponent";
 import {IManager} from "../../interfaces/manager/IManager";
@@ -23,15 +23,9 @@ const CPanelComponent: FC<IProps> = ({stats, managers}) => {
         control,
         handleSubmit,
         reset
-    } = useForm<ICreateManagerFormData>({
-        defaultValues: {
-            email: "manager@gmail.com",
-            name: "manager",
-            surname: "managerovich",
-        }
-    });
+    } = useForm<ICreateManagerRequest>({});
 
-    const onSubmit: SubmitHandler<ICreateManagerFormData> = (data) => {
+    const onSubmit: SubmitHandler<ICreateManagerRequest> = (data) => {
         addManager(data)
             .then(() => {
                 setModalOpen(false);

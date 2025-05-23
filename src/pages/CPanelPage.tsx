@@ -35,11 +35,8 @@ const CPanelPage: FC = () => {
             })
     }, [page]);
 
-
-    console.log(perPage)
-
     return (
-        <div className="d-flex flex-column align-items-center justify-content-evenly p-4">
+        <div className="d-flex flex-column align-items-center justify-content-evenly p-4 w-100">
             {isLoaded ?
                 <>
                     <CPanelComponent managers={managers} stats={stats}/>

@@ -133,7 +133,7 @@ const OrdersPage: FC = () => {
                             />
                         </>
                     ) : (
-                        <h3 className="mt-4 text-danger">No orders matched</h3>
+                        <h3 className="mt-4 text-danger">No orders</h3>
                     )}
                 </div>
             ) : (

@@ -6,8 +6,7 @@ export interface IManager {
     name: string;
     surname: string;
     isActive: boolean;
-    lastLogIn: string | null;
+    lastLogin: string | null;
     isBanned: boolean;
-    total: number;
     stats?: IStat[];
 }

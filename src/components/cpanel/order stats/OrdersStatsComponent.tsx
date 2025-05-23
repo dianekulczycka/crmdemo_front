@@ -12,7 +12,7 @@ const OrdersStatsComponent: FC<IProps> = ({stats}) => {
             <h3>Orders:</h3>
             {stats.length > 0 ? (
                 <ul className="list-unstyled">
-                    {stats.map(stat => <OrderStatsItemComponent stat={stat}/>)}
+                    {stats.map((stat, index) => <OrderStatsItemComponent key={index} stat={stat}/>)}
                 </ul>
             ) : (
                 <h3 className="text-danger">No stats</h3>
